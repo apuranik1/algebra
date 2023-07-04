@@ -63,12 +63,7 @@ def group_rep(dimension: int) -> Callable[[Group], np.ndarray]:
     
     In 1D, produces the trivial rep; in 2D, the defining rep.
     """
-    if dimension == 1:
-        def rep(elt: Group) -> np.ndarray:
-            return np.array([[1.]])
-
-        return rep
-    
+    assert dimension >= 1
     def rep(elt: Group) -> np.ndarray:
         deg = dimension - 1  # degree of polynomials
         ft = np.fft.fft(elt.matrix, dimension)
