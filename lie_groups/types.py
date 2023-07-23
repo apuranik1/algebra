@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from typing import Any, ClassVar, Generic, Self, TypeVar, Type
 
 import numpy as np
-import numpy.typing as npt
+from numpy.typing import NDArray
 import numpy.linalg as LA
 import scipy.linalg as SLA
 
@@ -67,7 +67,7 @@ class LieAlgElt(Generic[G]):
 class MatrixGroupElt(GroupElt):
     """Matrix group. Not always the most efficient representation."""
 
-    matrix: npt.NDArray[np.complex_]
+    matrix: NDArray[np.complex_]
 
     @classmethod
     @abstractmethod
@@ -96,7 +96,7 @@ class MatrixLieAlgElt(LieAlgElt[MG]):
     Subclasses should validate in __post_init__.
     """
 
-    matrix: npt.NDArray[np.complex_]
+    matrix: NDArray[np.complex_]
 
     @classmethod
     @abstractmethod

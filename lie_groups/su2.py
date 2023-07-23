@@ -3,8 +3,8 @@ from dataclasses import dataclass
 from typing import Callable, Type
 
 import numpy as np
-import numpy.typing as npt
 import numpy.linalg as LA
+from numpy.typing import NDArray
 
 from . import types
 
@@ -94,7 +94,7 @@ def set_diagonal(arr, values, which_diag=0):
     arr[min_row + offsets, min_col + offsets] = values
 
 
-def alg_rep(dimension: int) -> Callable[[LieAlgElt], npt.NDArray[np.complex_]]:
+def alg_rep(dimension: int) -> Callable[[LieAlgElt], NDArray[np.complex_]]:
     """Compute the Lie algebra representation of a given dimension
 
     Like before, this one is dual to the usual rep so that in 2D it
@@ -102,7 +102,7 @@ def alg_rep(dimension: int) -> Callable[[LieAlgElt], npt.NDArray[np.complex_]]:
     """
     assert dimension >= 1
 
-    def rep(elt: LieAlgElt) -> npt.NDArray[np.complex_]:
+    def rep(elt: LieAlgElt) -> NDArray[np.complex_]:
         deg = dimension - 1
 
         X = elt.matrix
