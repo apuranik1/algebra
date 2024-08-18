@@ -8,6 +8,17 @@ import numpy.linalg as LA
 
 from . import types
 
+X = np.array([[0., 1.], [1., 0.]])
+Y = np.array([[0., -1.j], [1.j, 0.]])
+Z = np.diag([1., -1.])
+
+PAULI = np.stack([X, Y, Z], axis=0)
+
+# skew-hermitian matrices with the relation [S1, S2] = S3 and so on
+_S = -0.5j * PAULI
+
+def S(i):
+    return _S[i - 1]
 
 @dataclass(frozen=True)
 class GroupElt(types.MatrixGroupElt):

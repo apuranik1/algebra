@@ -1,0 +1,17 @@
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+[project]
+name = "lie-groups"
+version = "0.0.1"
+authors = [
+  { name="Alok Puranik", email="alokpuranik@gmail.com" },
+]
+description = "Stuff about Lie Groups and Lie Algebras"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
