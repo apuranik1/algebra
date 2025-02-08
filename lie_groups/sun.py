@@ -43,11 +43,20 @@ def make_su_n(n: int) -> type[types.MatrixLieAlgElt]:
         @classmethod
         def basis(cls) -> list[LieAlgElt]:
             elts = []
+            for i in range(n - 1):
+                mat = np.zeros((n, n), dtype=np.complex128)
+                mat[i, i] = 1j
+                mat[n-1, n-1] = -1j
+                elts.append(LieAlgElt(mat))
             for k in range(n):
                 for l in range(k):
                     mat = np.zeros((n, n), dtype=np.complex128)
                     mat[k, l] = mat[l, k] = 1j
-                    elts.append(mat)
+                    elts.append(LieAlgElt(mat))
+                    mat = np.zeros((n, n), dtype=np.complex128)
+                    mat[k, l] = 1
+                    mat[l, k] = -1
+                    elts.append(LieAlgElt(mat))
             return elts
 
     LieAlgElt.__name__ = f"su({n})"
@@ -55,3 +64,4 @@ def make_su_n(n: int) -> type[types.MatrixLieAlgElt]:
     return LieAlgElt
 
 su3 = make_su_n(3)
+su4 = make_su_n(4)
