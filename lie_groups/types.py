@@ -22,7 +22,7 @@ class GroupElt:
     @abstractmethod
     def __matmul__(self, other: Self) -> Self:
         pass
-
+            
     @abstractmethod
     def inverse(self) -> Self:
         pass
@@ -97,6 +97,11 @@ class MatrixLieAlgElt(LieAlgElt[MG]):
     @classmethod
     @abstractmethod
     def group(cls) -> Type[MG]:
+        pass
+
+    @classmethod
+    @abstractmethod
+    def basis(cls) -> list[Self]:
         pass
 
     def __add__(self, other: Self) -> Self:

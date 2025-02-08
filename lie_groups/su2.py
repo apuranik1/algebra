@@ -1,6 +1,6 @@
 from __future__ import annotations
 from dataclasses import dataclass
-from typing import Callable, Optional, Type
+from typing import Callable, Type
 
 import numpy as np
 import numpy.typing as npt
@@ -32,7 +32,7 @@ class GroupElt(types.MatrixGroupElt):
         return 2
 
     @staticmethod
-    def sample(rand: Optional[np.random.Generator] = None) -> GroupElt:
+    def sample(rand: np.random.Generator | None = None) -> GroupElt:
         if rand is None:
             rand = np.random.default_rng()
         # sample from 3-sphere
@@ -56,6 +56,10 @@ class LieAlgElt(types.MatrixLieAlgElt[GroupElt]):
     @classmethod
     def group(cls) -> Type[GroupElt]:
         return GroupElt
+
+    @classmethod
+    def basis(cls) -> list[LieAlgElt]:
+        return [LieAlgElt(S(i)) for i in range(1, 4)]
 
 
 def group_rep(dimension: int) -> Callable[[GroupElt], np.ndarray]:
