@@ -3,7 +3,7 @@
 from __future__ import annotations
 from abc import ABCMeta, abstractmethod
 from dataclasses import dataclass
-from typing import Generic, TypeVar
+from typing import Generic, Type, TypeVar
 
 import numpy as np
 import scipy.linalg as SLA
@@ -25,7 +25,7 @@ def rotation(theta) -> NDArray[np.float64]:
 
 
 @dataclass(frozen=True)
-class GroupElt:
+class GroupElt(types.GroupElt):
     """Element of E(2).
 
     Any such element is a semidirect product of rotations and translations
@@ -36,9 +36,25 @@ class GroupElt:
     theta: float
     translation: NDArray[np.float64]
 
+    def identity(cls: Type[Self]) -> Self:
+        return cls(0.0, np.zeros(2))
+
+    def rotation_matrix(self) -> np.ndarray:
+        return rotation(self.theta)
+
+    def __matmul__(self, other: Self) -> Self:
+        rot = self.rotation
+        return type(self)(
+            self.theta + other.theta, self.translation + rot @ other.translation
+        )
+
+    def inverse(self) -> Self:
+        rot = self.rotation_matrix()
+        return type(self)(-self.theta, rot.T @ self.translation)
+
     def as_matrix(self: "GroupElt") -> np.ndarray:
         """Rep via matrices acting on homogeneous coordinates"""
-        R = rotation(self.theta)
+        R = self.rotation_matrix()
         top = np.hstack([R, self.translation])
         return np.vstack([top, np.array([0, 0, 1])])
 
@@ -55,7 +71,7 @@ class GroupElt:
 
 
 @dataclass(frozen=True)
-class AlgElt:
+class AlgElt(types.LieAlgElt[GroupElt]):
     """Element representing rotation at speed and translation at speed x"""
 
     theta: float
@@ -71,6 +87,18 @@ class AlgElt:
         R = np.array([0, -self.theta], [self.theta, 0])
         top = np.hstack([R, self.offset])  # all but the last row
         return np.vstack(top, np.zeros(3))
+
+    def bracket(self, other: Self) -> Self:
+        theta = 0
+        p1 = other.theta * self.offset[1] - self.theta * other.offset[1]
+        p2 = self.theta * other.offset[0] - other.theta * self.offset[0]
+        return type(self)(theta, np.array([p1, p2]))
+
+    def conj_by(self, g: GroupElt) -> Self:
+        # what does conjugating a group element look like?
+        # conjugation by a translation feels like it should be trivial
+        # (t, 1) (T, R) (-t, 1) = (t + T, R) (-t, 1) = (t + T - Rt, T)
+        pass
 
     def exp(self) -> GroupElt:
         return GroupElt.of_matrix(SLA.expm(self.as_matrix()))

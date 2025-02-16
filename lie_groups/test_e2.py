@@ -8,3 +8,11 @@ def test_of_matrix():
     elt = e2.GroupElt.of_matrix(mat)
     assert np.allclose(elt.theta, np.pi / 2)
     assert np.allclose(elt.offset, np.array([0.5, -0.3]))
+
+
+def test_e2_homog_rep():
+    g = e2.GroupElt(np.pi / 2, np.array([1.0, 0.0]))
+    mat = e2.as_matrix()
+    assert np.allclose(
+        mat, np.array([[0.0, -1.0, 1.0], [1.0, 0.0, 0.0], [0.0, 0.0, 1.0]])
+    )
