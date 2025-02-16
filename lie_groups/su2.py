@@ -8,17 +8,19 @@ import numpy.linalg as LA
 
 from . import types
 
-X = np.array([[0., 1.], [1., 0.]])
-Y = np.array([[0., -1.j], [1.j, 0.]])
-Z = np.diag([1., -1.])
+X = np.array([[0.0, 1.0], [1.0, 0.0]])
+Y = np.array([[0.0, -1.0j], [1.0j, 0.0]])
+Z = np.diag([1.0, -1.0])
 
 PAULI = np.stack([X, Y, Z], axis=0)
 
 # skew-hermitian matrices with the relation [S1, S2] = S3 and so on
 _S = -0.5j * PAULI
 
+
 def S(i):
     return _S[i - 1]
+
 
 @dataclass(frozen=True)
 class GroupElt(types.MatrixGroupElt):
@@ -47,11 +49,10 @@ class GroupElt(types.MatrixGroupElt):
 
 @dataclass(frozen=True)
 class LieAlgElt(types.MatrixLieAlgElt[GroupElt]):
-
     def __post_init__(self):
         # skew-symmetric and traceless
         assert np.allclose(self.matrix, -self.matrix.conj().T)
-        assert np.allclose(self.matrix.trace(), 0.)
+        assert np.allclose(self.matrix.trace(), 0.0)
 
     @classmethod
     def group(cls) -> Type[GroupElt]:
@@ -64,19 +65,20 @@ class LieAlgElt(types.MatrixLieAlgElt[GroupElt]):
 
 def group_rep(dimension: int) -> Callable[[GroupElt], np.ndarray]:
     """Compute the unique irrep of a given dimension.
-    
+
     This is based on the representation on the space of homogenous
     polynomials in two variables, but we use the dual rep since the
     standard choice doesn't specialize to the defining rep in 2D.
     """
     assert dimension >= 1
+
     def rep(elt: GroupElt) -> np.ndarray:
         deg = dimension - 1  # degree of polynomials
         ft = np.fft.fft(elt.matrix, dimension)
         w1, w2 = ft
         rows = []
         for i in range(dimension):
-            rows.append(np.fft.ifft(w1 ** (deg - i) * w2 ** i))
+            rows.append(np.fft.ifft(w1 ** (deg - i) * w2**i))
         return np.stack(rows)
 
     return rep
@@ -99,9 +101,10 @@ def alg_rep(dimension: int) -> Callable[[LieAlgElt], npt.NDArray[np.complex_]]:
     matches the defining rep.
     """
     assert dimension >= 1
+
     def rep(elt: LieAlgElt) -> npt.NDArray[np.complex_]:
         deg = dimension - 1
-        
+
         X = elt.matrix
         out = np.zeros((dimension, dimension), dtype=np.complex128)
         indices = np.arange(dimension)

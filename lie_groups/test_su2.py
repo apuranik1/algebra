@@ -3,6 +3,7 @@ import scipy.linalg as SLA
 
 from . import su2
 
+
 def test_group_rep():
     g1 = su2.GroupElt.sample()
     g2 = su2.GroupElt.sample()
@@ -13,7 +14,7 @@ def test_group_rep():
         mat2 = rep(g2)
         assert np.allclose(mat1 @ mat2, rep(g1g2))
 
-        
+
 def test_alg_rep_exp():
     x = su2.LieAlgElt(np.array([[2.0j, 1.3], [-1.3, -2.0j]], dtype=np.complex128))
     g = x.exp()
@@ -26,7 +27,9 @@ def test_alg_rep_exp():
 
 
 def test_alg_rep_bracket():
-    x = su2.LieAlgElt(np.array([[1.0j, 6.0 - 3.0j], [-6.0 - 3.0j, -1.0j]], dtype=np.complex128))
+    x = su2.LieAlgElt(
+        np.array([[1.0j, 6.0 - 3.0j], [-6.0 - 3.0j, -1.0j]], dtype=np.complex128)
+    )
     y = su2.LieAlgElt(np.array([[2.0j, 1.3], [-1.3, -2.0j]], dtype=np.complex128))
     for dim in range(1, 6):
         alg_rep = su2.alg_rep(dim)

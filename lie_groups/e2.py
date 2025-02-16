@@ -24,10 +24,11 @@ from . import types
 @dataclass(frozen=True)
 class GroupElt:
     """Element of E(2).
-    
+
     Any such element is a semidirect product of rotations and translations
     in 2D. The translation part is stored as a vector, and the rotations as
     an angle theta.
     """
+
     theta: float
     translation: npt.NDArray[np.float64]

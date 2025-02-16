@@ -4,9 +4,10 @@ from scipy.linalg import null_space
 from lie_groups.types import MatrixLieAlgElt
 from lie_groups.util import components
 
+
 def solve_equivalence(elts1, elts2):
     """Solves for an equivalence of representations.
-    
+
     Specifically compute the set of matrices S such that SA = BS
     for each (A, B) in zip(elts1, elts2). Any such invertible matrix
     gives an isomorphism of the representations.
@@ -16,6 +17,7 @@ def solve_equivalence(elts1, elts2):
     for a, b in zip(elts1, elts2):
         blocks.append(np.kron(np.eye(dim), a.T) - np.kron(b, np.eye(dim)))
     return null_space(np.concatenate(blocks, axis=0), rcond=1e-10).reshape(-1, dim, dim)
+
 
 def adjoint_matrices(basis: list[MatrixLieAlgElt]) -> list[np.ndarray]:
     """Compute matrices of the adjoint representation given a basis of the algebra"""

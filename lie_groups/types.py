@@ -11,6 +11,7 @@ import scipy.linalg as SLA
 
 G = TypeVar("G", bound="GroupElt")
 
+
 class GroupElt:
     """A group. `G` should be the same as the class."""
 
@@ -22,7 +23,7 @@ class GroupElt:
     @abstractmethod
     def __matmul__(self, other: Self) -> Self:
         pass
-            
+
     @abstractmethod
     def inverse(self) -> Self:
         pass
@@ -30,13 +31,14 @@ class GroupElt:
 
 class LieAlgElt(Generic[G]):
     """Lie algebra over the group `G`.
-    
+
     `A` should be the same as the class.
     """
+
     @abstractmethod
     def bracket(self, other: Self) -> Self:
         """Lie bracket.
-        
+
         `*` is reserved for scalar multiplication, and `@` is reserved for the
         product in the universal enveloping algebra.
         """
@@ -54,7 +56,7 @@ class LieAlgElt(Generic[G]):
     @abstractmethod
     def __rmul__(self, scalar: complex) -> Self:
         """Multiply by a scalar.
-        
+
         Really this should only allow real numbers, but we pretty much always
         care about the complexification.
         """
@@ -64,6 +66,7 @@ class LieAlgElt(Generic[G]):
 @dataclass(frozen=True)
 class MatrixGroupElt(GroupElt):
     """Matrix group. Not always the most efficient representation."""
+
     matrix: npt.NDArray[np.complex_]
 
     @classmethod
@@ -88,10 +91,11 @@ MG = TypeVar("MG", bound=MatrixGroupElt)
 @dataclass(frozen=True)
 class MatrixLieAlgElt(LieAlgElt[MG]):
     """Lie algebra of a matrix group
-    
+
     Also implements the universal enveloping algebra.
     Subclasses should validate in __post_init__.
     """
+
     matrix: npt.NDArray[np.complex_]
 
     @classmethod
@@ -122,5 +126,3 @@ class MatrixLieAlgElt(LieAlgElt[MG]):
 
     def conj_by(self, g: MG) -> Self:
         return type(self)(g.matrix @ self.matrix @ g.inverse().matrix)
-
-    

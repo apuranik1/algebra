@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def comm(x, y):
     return x @ y - y @ x
 
@@ -32,7 +33,7 @@ def orth_complement(basis: np.ndarray, subspace_basis: np.ndarray) -> np.ndarray
     The full space is the column span of `basis`, and the subspace is the column
     span of `subspace_basis`.
     """
-    frob = (basis ** 2).sum() ** 0.5
+    frob = (basis**2).sum() ** 0.5
     proj_coefs = np.linalg.lstsq(subspace_basis, basis, rcond=1e-8)[0]
     proj = subspace_basis @ proj_coefs
     remainder = basis - proj
