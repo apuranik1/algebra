@@ -29,7 +29,7 @@ def complex_colors(z: np.ndarray):
 
 def label_matrix(matrix, ax=None) -> plt.Axes:
     if ax is None:
-        _fig, ax = plt.subplots()
+        _fig, ax = plt.subplots(figsize=(10, 10))
     ax.set_xticks([])
     ax.set_yticks([])
     for i in range(matrix.shape[0]):

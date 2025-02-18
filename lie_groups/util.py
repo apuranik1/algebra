@@ -1,4 +1,5 @@
 import numpy as np
+from scipy.linalg import null_space
 
 
 def comm(x, y):
@@ -19,7 +20,7 @@ def components(vector: np.ndarray, basis: np.ndarray) -> np.ndarray:
 
 def canonicalize(basis: np.ndarray) -> np.ndarray:
     """Change the scaling and phase of a basis so that it's unit norm and 'nice'"""
-    scale = (basis @ basis.conj().T)[0, 0]
+    scale = (basis.conj().T @ basis)[0, 0]
     basis = basis / np.sqrt(scale)  # normalize properly
     first_nonzero = np.flatnonzero(np.abs(basis) > 1e-10)[0]
     phase = basis.ravel()[first_nonzero]
@@ -40,3 +41,10 @@ def orth_complement(basis: np.ndarray, subspace_basis: np.ndarray) -> np.ndarray
     u, s, _ = np.linalg.svd(remainder)
     n_nonzero = (s > frob * 1e-8).sum()
     return u[:, :n_nonzero]
+
+
+def intersect(basis1: np.ndarray, basis2: np.ndarray) -> np.ndarray:
+    """Compute the intersection of two subspaces"""
+    combined = np.hstack([basis1, basis2])
+    coefs = null_space(combined)[:basis1.shape[1]]
+    return basis1 @ coefs
